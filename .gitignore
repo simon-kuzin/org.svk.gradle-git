@@ -35,8 +35,8 @@ hs_err_pid*
 .settings
 .springBeans
 .sts4-cache
-/target/
-/bin/
+target/
+bin/
 
 # NetBeans
 /nbproject/private/
