@@ -22,7 +22,7 @@ class GitExtension{
                                 "-${it.commit_abbr_id}"+
                                 "-${it.branch_short}"
                                 }
-            version+ "-${(it.clean)?:'dirty'}"
+            version+ "-${(it.clean)?'':'dirty'}"
             }
     public Closure versionTagCleanup={it -> it.find(/\d.+$/)}
 
