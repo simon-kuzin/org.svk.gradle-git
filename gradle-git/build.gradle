@@ -1,0 +1,102 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'org.ajoberstar.grgit:grgit-core:4.0.1'
+    testImplementation 'junit:junit:4.12'
+}
+
+task('cleanRepo'){
+    doLast{
+        delete repoDir
+    }
+}
+publish.dependsOn cleanRepo
+
+version =   '0.0.1-SNAPSHOT'
+group =     'org.svk'
+
+java.targetCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+
+tasks.withType(GroovyCompile) {
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+java {
+   withJavadocJar()
+   withSourcesJar()
+}
+
+publishing {
+
+    repositories {
+        maven{
+            name 'ProjectLocal'
+            url uri(repoDir)
+        }
+    }
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.resources, sourceSets.main.groovy
+}
+
+gradlePlugin {
+    plugins { 
+        gradleGitPlugin { 
+            id = 'org.svk.gradle-git' 
+            implementationClass = 'org.svk.gradlegit.GradleGitPlugin'
+        }
+    }
+}
+
+task('runPrintProjectGitInfo',type:Exec)
+{
+    dependsOn 'publish'
+    group 'verification'
+    workingDir '../test-project/'
+    commandLine 'gradle','printProjectGitInfo'//,'--no-daemon'
+}
+
+task('runSemVerComplianceTest',type:Exec)
+{
+    dependsOn 'publish'
+    group 'verification'
+    workingDir '../test-project/'
+    commandLine 'gradle','assertSemVer20Compliant'
+}
+
+task('runDockerComplianceTest',type:Exec)
+{
+    dependsOn 'publish'
+    group 'verification'
+    workingDir '../test-project/'
+    commandLine 'gradle','assertDockerTagCompliant'
+}
+
+task('runVersionComplianceDependencyTest',type:Exec)
+{
+    dependsOn 'publish'
+    group 'verification'
+    workingDir '../test-project/'
+    commandLine 'gradle','testVesionComplianceAsserts'
+}

@@ -1,0 +1,14 @@
+plugins {
+    id 'groovy'
+}
+
+ext.commonRepoDir="${buildDir}/repo"
+def rootBuildDir=new File("${buildDir}")
+
+subprojects{
+    ext.repoDir=commonRepoDir
+    java.sourceCompatibility = JavaVersion.VERSION_1_8
+    java.targetCompatibility = JavaVersion.VERSION_1_8
+    buildDir=rootBuildDir
+}
+

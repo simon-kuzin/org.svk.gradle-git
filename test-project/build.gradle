@@ -1,0 +1,12 @@
+plugins {
+    id 'org.svk.gradle-git'
+}
+
+task testVesionComplianceAsserts {
+    dependsOn assertSemVer20Compliant, assertDockerTagCompliant
+    doLast {
+        throw new GradleException('testVesionComplianceAsserts must not be executed is compliance assert failed')
+    }
+}
+
+project.version='2.2.2-RC+12345'

@@ -1,0 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            name 'ProjectLocal'
+            url uri("file:../build/repo/")
+        }
+        gradlePluginPortal()
+        jcenter()
+    }
+    plugins{
+        id "org.svk.gradle-git" version "0.0.1-SNAPSHOT"
+    }
+}
